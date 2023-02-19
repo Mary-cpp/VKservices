@@ -26,8 +26,8 @@ class ServicesRecyclerAdapter(private val services: List<Service>?) :
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.name.text = services!![position].name ?: "N/A"
         Picasso.get()
-            .load(services[position].serviceUrl)
-            .error(R.drawable.ic_launcher_background)
+            .load(services[position].iconUrl)
+            .error(R.mipmap.ic_launcher)
             .into(holder.image)
     }
 }
