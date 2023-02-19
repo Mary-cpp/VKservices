@@ -31,19 +31,19 @@ class MainActivity : AppCompatActivity() {
     private fun parseJson() {
 
         // create Retrofit
-        val retrofit: Retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://mobile-olympiad-trajectory.hb.bizmrg.com/semi-final-data.json/")
             .addConverterFactory(
                 GsonConverterFactory.create()
             )
             .build()
 
         // create service
-        val service: JsonApi = retrofit.create(JsonApi::class.java)
+        val request: JsonApi = retrofit.create(JsonApi::class.java)
 
         // Define scope & create a Coroutine
         CoroutineScope(Dispatchers.IO).launch{
-            val response = service.getServices()
+            val response = request.getServices()
 
             // Changing CoroutineContext
             withContext(Dispatchers.Main){
@@ -53,22 +53,22 @@ class MainActivity : AppCompatActivity() {
                     val items = response.body()
                     if (items!= null) {
                         sList.apply {
-                            ServicesRecyclerAdapter(items)
-                            sList.adapter!!.notifyDataSetChanged()
+                            adapter = ServicesRecyclerAdapter(items.list)
+                             sList.adapter!!.notifyDataSetChanged()
                         }
-                        repeat(items.count()){
+                        repeat(items.list.count()){
 
                             // Logging
-                            val name = items[it].name ?: "N/A"
+                            val name = items.list[it].name ?: "N/A"
                             Log.d("name: ", name)
 
-                            val description = items[it].description ?: "N/A"
+                            val description = items.list[it].description ?: "N/A"
                             Log.d("description: ", description)
 
-                            val icon = items[it].iconUrl ?: "N/A"
+                            val icon = items.list[it].iconUrl ?: "N/A"
                             Log.d("icon: ", icon)
 
-                            val url = items[it].serviceUrl ?: "N/A"
+                            val url = items.list[it].serviceUrl ?: "N/A"
                             Log.d("url: ", url)
                         }
                     }
