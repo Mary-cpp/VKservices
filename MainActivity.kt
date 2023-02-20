@@ -1,6 +1,7 @@
 package com.example.vkservices
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -53,7 +54,18 @@ class MainActivity : AppCompatActivity() {
                     val items = response.body()
                     if (items!= null) {
                         sList.apply {
-                            adapter = ServicesRecyclerAdapter(items.list)
+                            adapter = ServicesRecyclerAdapter(items.list,
+                            object : ServicesRecyclerAdapter.OnServiceClickListener{
+                                override fun onServiceClick(service: Service) {
+                                    val intent = Intent(this@MainActivity, ServicePage::class.java)
+                                    intent.putExtra("name", service.name)
+                                    intent.putExtra("desc", service.description)
+                                    intent.putExtra("icon", service.iconUrl)
+                                    intent.putExtra("url", service.serviceUrl)
+                                    startActivity(intent)
+                                }
+
+                            })
                              sList.adapter!!.notifyDataSetChanged()
                         }
                         repeat(items.list.count()){
